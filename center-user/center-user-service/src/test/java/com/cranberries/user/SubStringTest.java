@@ -73,4 +73,13 @@ public class SubStringTest {
             }
         }
     }
+
+    @Test
+    void replaceTest() {
+        String carNo = "沪沪AA9999";
+
+       String newCarNo = carNo.replace("沪", "");
+
+        System.out.println("新车牌号:" + newCarNo);
+    }
 }
