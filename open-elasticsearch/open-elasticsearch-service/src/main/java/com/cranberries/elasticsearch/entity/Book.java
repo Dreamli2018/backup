@@ -9,6 +9,7 @@ import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.data.elasticsearch.annotations.Mapping;
 
+import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -32,6 +33,7 @@ public class Book implements Serializable {
 
     @Field(name = "name", type = FieldType.Text, analyzer = "ik_max_word")
     @ApiModelProperty(value = "书名", example = "围城")
+    @Pattern(regexp = "[\\p{P}]", message = "不能包含标点符号")
     private String name;
 
     @Field(name = "author", type = FieldType.Text, analyzer = "ik_max_word")

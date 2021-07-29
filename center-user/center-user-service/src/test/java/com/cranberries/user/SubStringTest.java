@@ -76,9 +76,10 @@ public class SubStringTest {
 
     @Test
     void replaceTest() {
-        String carNo = "沪沪AA9999";
+        String carNo = "沪沪,:AA9999,";
 
-       String newCarNo = carNo.replace("沪", "");
+//       String newCarNo = carNo.replace("沪", "");
+       String newCarNo = carNo.replaceAll("[\\p{P}]", "");
 
         System.out.println("新车牌号:" + newCarNo);
     }

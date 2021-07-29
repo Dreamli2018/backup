@@ -7,6 +7,7 @@ import com.cranberries.elasticsearch.mapper.UserLocationSearchMapper;
 import com.cranberries.elasticsearch.repository.UserLocationSearchRepository;
 import com.cranberries.elasticsearch.service.UserLocationSearchService;
 import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.common.geo.GeoDistance;
 import org.elasticsearch.common.unit.DistanceUnit;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -72,11 +73,17 @@ public class UserLocationSearchServiceImpl implements UserLocationSearchService 
         // 地理位置距离查询
         String name = "location";
         log.info("查询es中附近的人请求参数，距离:{}米，维度:{},经度:{}", distance, lat, lon);
+//        org.elasticsearch.common.geo.GeoPoint topLeft  = new org.elasticsearch.common.geo.GeoPoint(31.293072, 121.192078);
+//        org.elasticsearch.common.geo.GeoPoint bottomRight = new org.elasticsearch.common.geo.GeoPoint(lat, lon);
         QueryBuilder queryBuilder = QueryBuilders.boolQuery()
                 .must(QueryBuilders.termQuery("status", 1))
+                // 地理距离过滤器
                 .filter(QueryBuilders.geoDistanceQuery(name)
-                        .distance(distance, DistanceUnit.METERS)
-                        .point(lat, lon));
+                        .geoDistance(GeoDistance.PLANE)// 计算方式
+                        .distance(distance, DistanceUnit.METERS)// 圆半径
+                        .point(lat, lon));// 中心点坐标
+            //地理坐标盒模型过滤器
+//        .filter(QueryBuilders.geoBoundingBoxQuery(name).setCorners(topLeft, bottomRight));
         // 执行搜索
         Iterable<UserLocation> userLocations = this.userLocationSearchRepository.search(queryBuilder);
         long end = System.currentTimeMillis();
